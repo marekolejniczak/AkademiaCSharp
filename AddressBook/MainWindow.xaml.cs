@@ -16,29 +16,81 @@ using System.Windows.Shapes;
 
 namespace AddressBook
 {
+    public enum BookTypeEnum
+    {
+        NetBook,
+        PhoneBook
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         public ObservableCollection<NormalContact> TeleBookCollection { get; set; }
+        public ObservableCollection<InternetContact> NetBookCollection { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             this.DataContext = this;
+
             TeleBookCollection = new ObservableCollection<NormalContact>();
+            NetBookCollection = new ObservableCollection<InternetContact>();
+
+            this.KindOfBookComboBox.ItemsSource = Enum.GetValues(typeof(BookTypeEnum));
+            this.KindOfBookComboBox.SelectedIndex = 0;
         }
 
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             string name = this.NameBox.Text;
             string surname = this.SurnameTextBox.Text;
-            uint phoneNumber = uint.Parse(this.NumberBox.Text);
-            string street = this.StreetBox.Text;
             
-            NormalContact person = new NormalContact(name, surname, street , phoneNumber);
-            TeleBookCollection.Add(person);
+            BookTypeEnum SelectedBook = (BookTypeEnum)Enum.Parse(typeof(BookTypeEnum), this.KindOfBookComboBox.Text);
+            if (SelectedBook == BookTypeEnum.NetBook)
+            {
+                string email = this.NumberBox.Text;
+                InternetContact personNet = new InternetContact(name, surname, email);
+                NetBookCollection.Add(personNet);
+            }
+            if (SelectedBook == BookTypeEnum.PhoneBook)
+            {
+                uint phoneNumber = uint.Parse(this.NumberBox.Text);
+                NormalContact person = new NormalContact(name, surname, phoneNumber);
+                TeleBookCollection.Add(person);
+            }           
+        }
+
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.TeleBookCollection.RemoveAt(this.AddressBookList.SelectedIndex);            
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                try
+                {
+                    this.NetBookCollection.RemoveAt(this.NetBookList.SelectedIndex);
+                }
+                catch(System.ArgumentOutOfRangeException)
+                {
+                    MessageBox.Show("Select item to delete.", "Delete item");
+                }              
+            }
+        }
+
+        private void KindOfBookComboBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            BookTypeEnum SelectedBook = (BookTypeEnum)Enum.Parse(typeof(BookTypeEnum), this.KindOfBookComboBox.Text);
+            if (SelectedBook == BookTypeEnum.NetBook)
+            {
+                this.Email_Telephone.Content = "Email";
+            }
+            else
+            {
+                this.Email_Telephone.Content = "PhoneNumber";
+            }
         }
     }
 }

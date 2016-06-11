@@ -11,7 +11,13 @@
             <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <ListView Name="AddressBookList" Margin="5" Grid.Column="0" ItemsSource="{Binding TeleBookCollection}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <ListView Name="AddressBookList" Margin="5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding TeleBookCollection}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Surname" DisplayMemberBinding="{Binding Surname}"/>
@@ -21,29 +27,41 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Column="1" Margin="5">
-                <Label Content="Dane" FontSize="25" HorizontalAlignment="Center"/>
-                <StackPanel>
-                    <Label Content="Surname"/>
-                    <TextBox Name="SurnameTextBox" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Name"/>
-                    <TextBox Name="NameBox" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="TelephoneNumber" />
-                    <TextBox Name="NumberBox" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Street" />
-                    <TextBox Name="StreetBox" />
-                </StackPanel>
-                <StackPanel>
-                    <Label Content="Weight" />
-                </StackPanel>
-            </StackPanel>
-            <Button x:Name="Add" Content="Add" HorizontalAlignment="Left" Margin="10,288,0,0" VerticalAlignment="Top" Width="75" Click="Add_Button_Click" Grid.Column="1"/>
+        <ListView Name="NetBookList" Margin="5" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding NetBookCollection}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Surname" DisplayMemberBinding="{Binding Surname}"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
+        <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="5">
+            <Label Content="Dane" FontSize="25" HorizontalAlignment="Center"/>
+            <StackPanel>
+                <Label Content="Surname"/>
+                <TextBox Name="SurnameTextBox" />
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Name"/>
+                <TextBox Name="NameBox" />
+            </StackPanel>
+            <StackPanel>
+                <Label Name="Email_Telephone" Content="TelephoneNumber" />
+                <TextBox Name="NumberBox" />
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Kind of book" />
+                <ComboBox Name="KindOfBookComboBox" MouseMove="KindOfBookComboBox_MouseMove" />
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Weight" />
+            </StackPanel>
+            <WrapPanel Orientation="Horizontal">
+                <Button x:Name="Add" Content="Add" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="Add_Button_Click" Grid.Column="1"/>
+                <Button x:Name="Delete" Content="Delete" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="Delete_Button_Click" Grid.Column="1"/>
+            </WrapPanel>
+        </StackPanel>
     </Grid>
 </Window>

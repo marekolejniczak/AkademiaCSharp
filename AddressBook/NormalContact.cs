@@ -15,11 +15,10 @@ namespace AddressBook
 
         }
 
-        public NormalContact(string name, string surname, string street, uint phone)
+        public NormalContact(string name, string surname,uint phone)
         {
             this.Name = name;
             this.Surname = surname;
-            this.Street = street;
             this.PhoneNumber = phone;
         }
     }
