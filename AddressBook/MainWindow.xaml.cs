@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using System.Xml.Serialization;
 
 namespace AddressBook
 {
@@ -44,20 +36,39 @@ namespace AddressBook
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             string name = this.NameBox.Text;
+            this.NameBox.Text = "";
             string surname = this.SurnameTextBox.Text;
-            
+            this.SurnameTextBox.Text = "";
+
             BookTypeEnum SelectedBook = (BookTypeEnum)Enum.Parse(typeof(BookTypeEnum), this.KindOfBookComboBox.Text);
             if (SelectedBook == BookTypeEnum.NetBook)
             {
-                string email = this.NumberBox.Text;
-                InternetContact personNet = new InternetContact(name, surname, email);
-                NetBookCollection.Add(personNet);
+                try
+                {
+                    string email = this.NumberBox.Text;
+                    InternetContact personNet = new InternetContact(name, surname, email);
+                    NetBookCollection.Add(personNet);
+                    this.NumberBox.Text = "";
+                }
+                catch
+                {
+                    MessageBox.Show("Put correct e-mail.", "Incorrect email");
+                }
+
             }
             if (SelectedBook == BookTypeEnum.PhoneBook)
             {
-                uint phoneNumber = uint.Parse(this.NumberBox.Text);
-                NormalContact person = new NormalContact(name, surname, phoneNumber);
-                TeleBookCollection.Add(person);
+                try
+                {
+                    uint phoneNumber = uint.Parse(this.NumberBox.Text);
+                    NormalContact person = new NormalContact(name, surname, phoneNumber);
+                    TeleBookCollection.Add(person);
+                    this.NumberBox.Text = "";
+                }
+                catch
+                {
+                    MessageBox.Show("Put correct phone number.", "Incorrect phone number");
+                }
             }           
         }
 
@@ -80,7 +91,57 @@ namespace AddressBook
             }
         }
 
-        private void KindOfBookComboBox_MouseMove(object sender, MouseEventArgs e)
+        private void SaveTeleBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "TeleBook"; // Default file name
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML documents (.xml)|*.xml";
+
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string filePath = dlg.FileName;
+
+                TeleBookToXmlFile(filePath);
+            }
+        }
+
+        private void TeleBookToXmlFile(string filePath)
+        {
+            using (var stream = new StreamWriter(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(ObservableCollection<NormalContact>));
+                serializer.Serialize(stream , TeleBookCollection);
+            }
+        }
+
+        private void SaveNetBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "NetBook"; // Default file name
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "XML documents (.xml)|*.xml";
+
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string filePath = dlg.FileName;
+
+                NetBookToXmlFile(filePath);
+            }
+        }
+
+        private void NetBookToXmlFile(string filePath)
+        {
+            using (var stream = new StreamWriter(filePath))
+            {
+                var serializer = new XmlSerializer(typeof(ObservableCollection<InternetContact>));
+                serializer.Serialize(stream, NetBookCollection);
+            }
+        }
+
+        private void KindOfBookComboBox_DropDownClosed(object sender, EventArgs e)
         {
             BookTypeEnum SelectedBook = (BookTypeEnum)Enum.Parse(typeof(BookTypeEnum), this.KindOfBookComboBox.Text);
             if (SelectedBook == BookTypeEnum.NetBook)

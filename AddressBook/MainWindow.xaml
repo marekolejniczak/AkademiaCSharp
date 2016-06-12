@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AddressBook"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Ksiazka Tele/Net" Height="auto" Width="auto">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
@@ -16,8 +16,9 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-
-        <ListView Name="AddressBookList" Margin="5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding TeleBookCollection}">
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+            <Label Content="PhoneBook"/>
+            <ListView Name="AddressBookList" Tag="Telebook" Margin="5" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding TeleBookCollection}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Surname" DisplayMemberBinding="{Binding Surname}"/>
@@ -26,16 +27,19 @@
                 </GridView>
             </ListView.View>
         </ListView>
-
-        <ListView Name="NetBookList" Margin="5" Grid.Column="0" Grid.Row="1" ItemsSource="{Binding NetBookCollection}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Surname" DisplayMemberBinding="{Binding Surname}"/>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1">
+            <Label Content="NetBook"/>
+            <ListView Name="NetBookList" Margin="5" Width="auto" Height="auto"  ItemsSource="{Binding NetBookCollection}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Surname" DisplayMemberBinding="{Binding Surname}"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="5">
             <Label Content="Dane" FontSize="25" HorizontalAlignment="Center"/>
@@ -48,19 +52,21 @@
                 <TextBox Name="NameBox" />
             </StackPanel>
             <StackPanel>
-                <Label Name="Email_Telephone" Content="TelephoneNumber" />
+                <Label Name="Email_Telephone" Content="Email" />
                 <TextBox Name="NumberBox" />
             </StackPanel>
             <StackPanel>
                 <Label Content="Kind of book" />
-                <ComboBox Name="KindOfBookComboBox" MouseMove="KindOfBookComboBox_MouseMove" />
+                <ComboBox Name="KindOfBookComboBox" DropDownClosed="KindOfBookComboBox_DropDownClosed" />
             </StackPanel>
             <StackPanel>
-                <Label Content="Weight" />
+                <Label Content="Actions" />
             </StackPanel>
             <WrapPanel Orientation="Horizontal">
                 <Button x:Name="Add" Content="Add" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="Add_Button_Click" Grid.Column="1"/>
                 <Button x:Name="Delete" Content="Delete" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="Delete_Button_Click" Grid.Column="1"/>
+                <Button x:Name="SaveTele" Content="Save Telebook" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="SaveTeleBookButton_Click" Grid.Column="1"/>
+                <Button x:Name="SaveNet" Content="Save Netbook" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="auto" Height="auto" Click="SaveNetBookButton_Click" Grid.Column="1"/>
             </WrapPanel>
         </StackPanel>
     </Grid>
